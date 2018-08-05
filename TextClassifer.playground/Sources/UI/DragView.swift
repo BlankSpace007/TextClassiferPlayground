@@ -2,6 +2,8 @@ import AppKit
 
 class DragView: NSImageView {
     
+    weak var delegate:DragDelegate?
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
     }
@@ -29,21 +31,33 @@ extension DragView:NSDraggingSource{
     
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        
-        print("drag operation entered")
-        
         return NSDragOperation.copy;
     }
     
+    override func draggingEnded(_ sender: NSDraggingInfo) {
+//        print("drag operation ended")
+    }
+    
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+//        print("drag exit")
+    }
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        
         let fileURL = NSURL.init(from: sender.draggingPasteboard)
         let filePath:String = fileURL?.path ?? ""
         print("文件路径为：\(filePath)")
-        TextClassifer.begin(filePath)
+        
+        delegate?.endDrag(filePath)
         return true
     }
     
     
     
+}
+
+
+protocol DragDelegate:class{
+    
+    func endDrag(_ filePath:String) -> Void
 }

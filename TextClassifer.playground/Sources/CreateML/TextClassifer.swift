@@ -4,13 +4,14 @@ import CreateML
 
 class TextClassifer {
     
+    weak var delegate:TextClassiferDelegate?
     
-    class func begin(_ path:String) {
+    func begin(_ path:String,_ textColumn:String,_ labelColumn:String) {
         
         do{
             let data = try MLDataTable(contentsOf: URL(fileURLWithPath: path))
             let (trainingData, testingData) = data.randomSplit(by: 0.8, seed: 5)
-            let sentimentClassifier =  try MLTextClassifier(trainingData: trainingData, textColumn: "text",labelColumn: "label")
+            let sentimentClassifier =  try MLTextClassifier(trainingData: trainingData, textColumn: textColumn,labelColumn: labelColumn)
             // Training accuracy as a percentage
             let trainingAccuracy = (1.0 - sentimentClassifier.trainingMetrics.classificationError) * 100
             
@@ -23,18 +24,16 @@ class TextClassifer {
             let evaluationAccuracy = (1.0 - evaluationMetrics.classificationError) * 100
 
             print("测试正确率：\(evaluationAccuracy)" )
+            
+            delegate?.trainEnd(trainingAccuracy, validationAccuracy, evaluationAccuracy,sentimentClassifier)
         }catch {
             print("数据格式或者标签不正确")
         }
-        
-        
-        
-        
-        
-//        do{
-//                  }catch {
-//            print("xxxx")
-//        }
-//        
     }
+}
+
+
+protocol TextClassiferDelegate:class {
+    
+    func trainEnd(_ trainingAccuracy:Double,_ validationAccuracy:Double,_ evaluationAccuracy:Double,_ sentimentClassifier:MLTextClassifier ) ->  Void
 }
