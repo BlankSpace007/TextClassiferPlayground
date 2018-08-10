@@ -7,5 +7,6 @@
 
 ## **Usage**
 ![](https://github.com/BlankSpace007/TextClassiferPlayground/blob/master/resource1.png)
-
-![]("/resource2.png")
+修改文本标签和分类标签字段与数据集中保持一致，然后将文本数据集的JSON文件或者CSV文件拖入框中就会自动训练
+![](https://github.com/BlankSpace007/TextClassiferPlayground/blob/master/resource2.png)
+训练完成后，可以看到训练结果，并且保存模型到自己喜欢的位置
